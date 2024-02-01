@@ -388,13 +388,13 @@ When you job starts running a file name `<NAME_OF_SCRIPT>-<JOBID>.out` will show
 
 **Interactive job**
 
-You can request an interactive node on the cluster, which can be useful if you're just testing you scripts
+You can request an interactive node on the cluster, which can be useful if you're just testing your scripts and they require a significant amount of resources. You request an interactive node like this:
 
 ```bash
 srun --cpus-per-task=<num_cpus> --mem=<ram>g --time=<duration> --account=EcoGenetics --pty bash
 ```
 
-Here you can specify the number of cpus you want in \<num_cpus>, memory in GB ram in \<ram> and how long you would like access with \<duration> which is written in the format HH:MM:SS.
+Here you can specify the number of cpus you want in \<num_cpus>, memory in GB ram in \<ram> and how long you would like access with \<duration> which is written in the format HH:MM:SS, just the same as the settings at the beginning of a script you want to sent to the queue. If you're done with the interactive node before the time is up, you just write `exit` and press *ENTER* in the terminal and the node will close.
 
 ## Structure a project
 
@@ -456,4 +456,8 @@ That's right, it's `git`. You may think it's optional but it's not. I know what 
 
 `Git` in combination with GitHub is perfect for keeping our projects safe, accessible and reproducible. And wonderfully enough, it integrates perfectly with our working environment in VScode.
 
+This will be finished later...
+
 ### GWF
+
+To come...
