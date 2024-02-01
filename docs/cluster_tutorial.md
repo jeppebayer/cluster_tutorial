@@ -386,6 +386,16 @@ scancel <JOBID>
 
 When you job starts running a file name `<NAME_OF_SCRIPT>-<JOBID>.out` will show up in the directory from where you sent your script. This is the log file related to your job. If something goes wrong you can most likely figure out what from this log file.
 
+**Interactive job**
+
+You can request an interactive node on the cluster, which can be useful if you're just testing you scripts
+
+```bash
+srun --cpus-per-task=<num_cpus> --mem=<ram>g --time=<duration> --account=EcoGenetics --pty bash
+```
+
+Here you can specify the number of cpus you want in \<num_cpus>, memory in GB ram in \<ram> and how long you would like access with \<duration> which is written in the format HH:MM:SS.
+
 ## Structure a project
 
 ```txt
