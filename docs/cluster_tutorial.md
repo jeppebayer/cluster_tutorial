@@ -327,13 +327,64 @@ Congratulations! Now VScode is set and you're ready to go!
 
 ## Running jobs on the cluster
 
+When you want to run jobs on the cluster they have to be writtten in a `bash` script and sent to the *'queue'*. To create a new file, right-click on the location where you want it in the file-explorer on the left side of VScode and select *'New File...'*. Type in a name for your script (NEVER NEVER NEVER use spaces, that now belongs to your past life) and end with *'.sh'*, this is the typical file extension indicating a `bash` script. As you press *'ENTER'* and create the file will open in VScodes file editor.
+
+Now all `bash` scripts need to start with this line:
+
 ```bash
 #!/bin/bash
+```
+
+This is known as a *'shebang'*. It indicates which interpreter is needed to run the script. For scripts to be sent to the queue on the cluster the line immediately following the shebang needs to be `SBATCH` settings. There are many possible settings but the ones essential for you are the following:
+
+```bash
 #SBATCH --account=<PROJECT_YOU_BELONG_TO>
 #SBATCH --cpus-per-task=<CPU_NUM>
 #SBATCH --mem=<MEM>g
 #SBATCH --time=<HH:MM:SS>
 ```
+
+`--account` indicates whos paying for the resources the script will use.  
+`--cpus-per-task` is the number of cores you want access to. Multiple cores are used for jobs that can be parallelized.  
+`--mem` is the amount of memory (RAM) required. This can be difficult to know but with experience you get a feeling for it.  
+`--time` is the amount of time you would like to reserve for your job. Always take a bit more than you think you will need. If your job runs out of time before it is done it will just stop and then you will have to run it again. Knowing the amount of time needed for a job is also something that gets easier with experience.
+
+An example of a script that could be sent to the queue can be found [here](../scripts/example.sh), have a look and see if it makes sense to you. Notice how all paths start from *'/faststorage/'*. This is because the path are *'absolute'*. You should always work with absolute paths when possible as the location cannot be misinterpreted. If you right-click on an item in the file-explorer in VScode you can select *'Copy Path'*, this will give you the absolute path to that item.
+
+Having a ready script we want to sent it to the queue. Change you current directory to where the script is using `cd`, have the environment active which contains the packages needed to run the job, then write:
+
+```bash
+sbatch <SCRIPT_NAME>
+```
+
+You will then be given  *'JobID'* which identifies your job in the queue. If you run:
+
+```bash
+jobinfo <JOBID>
+```
+
+You will get detailed information about your job. Example:  
+![jobinfo](./images/jobinfo.png)
+
+You can get an overview of all jobs you have in the queue if you run:
+
+```bash
+squeue -u <USERNAME> 
+```
+
+You can expand on this information like this:
+
+```bash
+squeue -u <USERNAME> -l
+```
+
+If you have sent a job to the queue but for some reason want to stop it before it has run you can use:
+
+```bash
+scancel <JOBID>
+```
+
+When you job starts running a file name `<NAME_OF_SCRIPT>-<JOBID>.out` will show up in the directory from where you sent your script. This is the log file related to your job. If something goes wrong you can most likely figure out what from this log file.
 
 ## Structure a project
 
@@ -393,6 +444,6 @@ If you're not a part of **EcoGenetics** yet would like to utilize this script, i
 
 That's right, it's `git`. You may think it's optional but it's not. I know what you're thinking: "I don't need git, it seems needlessly complicated..." Stop it! You're going to use it... it has been decided... by me... and I'm in charge. Now go create a [GitHub account](https://github.com/). Off you go. I'll wait. Did you do it? Good! Welcome back then!
 
-`Git` in combination with GitHub is perfect for keeping our projects save, accessible and reproducible. And wonderfully enough, it integrates perfectly with our working environment in VScode.
+`Git` in combination with GitHub is perfect for keeping our projects safe, accessible and reproducible. And wonderfully enough, it integrates perfectly with our working environment in VScode.
 
 ### GWF
