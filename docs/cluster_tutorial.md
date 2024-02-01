@@ -6,10 +6,15 @@
   - [Python, Conda and the terminal](#python-conda-and-the-terminal)
   - [Logging on to the cluster](#logging-on-to-the-cluster)
   - [Your home on the cluster](#your-home-on-the-cluster)
+    - [Configure conda on the cluster](#configure-conda-on-the-cluster)
+    - [Useful command-line commands](#useful-command-line-commands)
   - [Terminals, file-explorers, and more](#terminals-file-explorers-and-more)
     - [VScode](#vscode)
+  - [Running jobs on the cluster](#running-jobs-on-the-cluster)
+  - [Structure a project](#structure-a-project)
   - [Master students and above](#master-students-and-above)
     - [Git](#git)
+    - [GWF](#gwf)
 
 ## Python, Conda and the terminal
 
@@ -22,7 +27,6 @@ When working on the cluster you need to install packages and programs for use in
 
 ## Logging on to the cluster
 
-
 ```cmd
   _____                                ______ _   __
  |  __ \                               |  _  \ | / /
@@ -31,7 +35,6 @@ When working on the cluster you need to install packages and programs for use in
  | |_\ \  __/ | | | (_) | | | | | |  __/ |/ /| |\  \
   \____/\___|_| |_|\___/|_| |_| |_|\___|___/ \_| \_/
   ```
-
 
 Now lets try logging on to the cluster. Open the terminal on your computer and write:
 
@@ -120,6 +123,9 @@ For me it looks like this:
 ![folder_content](./images/content.png)  
 You should see the text in different colors. The colors signify what you are looking at, like in my case where turqouis are shortcuts (or what is called 'soft-links'), blue are folders and white are files. Take note of the name in turqouis, this will reflect the name of the *'project'* that you're a part of and we will use it later.
 
+### Configure conda on the cluster
+
+**Install**  
 A thing you might have noticed is that I have a *miniconda* folder and you don't, so now we need *miniconda* on the cluster. In the terminal write:
 
 ```bash
@@ -133,6 +139,159 @@ bash Miniconda3-latest-Linux-x86_64.sh
 ```
 
 This runs the script and installs *miniconda*. Just follow the instructions and say 'yes' when it asks you if it should run `conda init`. When it's done you can check if there is a new folder with the `ls` command. You should also notice a small '(base)' next to your prompt. This indicates you current environment, which in this case is the 'base' environment.
+
+**Configure**  
+Let us do a little configuring to make `conda` work a little smoother. First we will add some *'channels'* to conda. Channels are data repositories where `conda` looks for packages. Some that will be useful for us are *'conda-forge'*, *'bioconda'*, *'genomedk'*, and *'gwforg'*. To add them, in the terminal type the following and after each press *ENTER*:
+
+```bash
+conda config --add channels gwforg
+conda config --add channels genomedk
+conda config --add channels bioconda
+conda config --add channels conda-forge
+```
+
+Next we're going to change the default *'solver'* used by `conda`. The solver is what handles the creation of the environment in terms of making sure that all installed packages compatible. In the terminal run the following:
+
+```bash
+conda install -n base -c defaults conda-libmamba-solver
+```
+
+When it has been installed, or it has been confirmed that it is already installed, run:
+
+```bash
+conda config --set solver libmamba
+```
+
+**Usage - Create**  
+Now that `conda` has been installed and configured let us have a look at how to use it. First lets us try creating an environment. To do this you write:
+
+```bash
+conda create -n <ENVIRONMENT_NAME> <PACKAGE_NAME>
+```
+
+For instance lets says need to work fith `BAM` files (alignment files) and for this I might need the package `samtools` but I also want `python` specifically in version 3.11 to be installed and I'll call my environment 'align_tools':
+
+```bash
+conda create -n align_tools samtools python=3.11
+```
+
+`conda` will always try to install the latest compatible version of a package if no version is specified. If a version is specified `conda` will ignore all other versions. After the environment has been created I can activate it by running:
+
+```bash
+conda activate <ENVIRONMENT_NAME>
+```
+
+**Usage - Install**  
+The parenthesis on the left side of your terminal should now also reflect the current active environment. You might later find that you need another package installed in your environment. Make sure the environment you want the new package installed in is your active environment. To install a new package you run:
+
+```bash
+conda install <PACKAGE_NAME>
+```
+
+**Usage - Remove**  
+Should you want to get out of your active environment you just run:
+
+```bash
+conda deactivate
+```
+
+And if you want to uninstall a package from an environment, that environment cannot be active. To uninstall a package you run:
+
+```bash
+conda remove -n <ENVIRONMENT_NAME> <PACKAGE_NAME>
+```
+
+You can also completely remove an entire environment by running:
+
+```bash
+conda remove --all -n <ENVIRONMENT_NAME>
+```
+
+**Usage - Misc**  
+You may be thinking "If I know of a piece of software I would like to use, how do I know if I can install it with conda?". For this we generally have two options, one is to use `conda` to search it's channels, the other is to search all public repositories through the [anaconda website](https://anaconda.org/anaconda/repo). On the website you simply type in the name of the software in the search-bar and you will get a list of best results as well as short descriptions of each package. Using conda to search you would run:
+
+```bash
+conda search <PACKAGE_NAME>
+```
+
+Searching with `conda` will also show you all avalable version of the package, which you can specify during installation if you want a particular one.
+
+As an important part of research is reproducibility, it's important that others can test things in an environment as close to yours as possible. To ease this you can always export one of your environments to `YAML` configuration file. With you environment active, you do this by running:
+
+```bash
+conda env export --from-history > environment.yml
+```
+
+The file *'environment.yml'* will now have been created and another person can recreate your environment by running:
+
+```bash
+conda env create -f environment.yml
+```
+
+### Useful command-line commands
+
+**Change current directory**
+
+```bash
+cd /path/to/directory
+```
+
+**Read large file**
+
+```bash
+less -S <FILENAME>
+```
+
+**Delete file**
+
+```bash
+rm <FILENAME>
+```
+
+**Delete directory (and everything in it)**
+
+```bash
+rm -r <DIRECTORY_NAME>
+```
+
+**Create directory**
+
+```bash
+mkdir <DIRECTORY_NAME>
+```
+
+**Info about any command**
+
+```bash
+<COMMAND> -h | --help 
+```
+
+**Changing permissions for file/directory**
+
+```bash
+chmod [options] [reference][operator][mode] [file | directory]
+```
+
+- \[reference\]: `u` (user), `g` (group), `o` (others), `a` (all)  
+- \[operator\]: `+` (add permissions), `-` (remove permissions)  
+- \[mode\]: `r` (read), `w` (write), `x` (execute)
+- \[options\]: `-R` (recursive, i.e. include all objects in subdirectories)
+
+Example:
+
+```bash
+chmod g+rwx file.txt
+```
+
+**File / Directory information**
+
+```bash
+ls -lh
+```
+
+Example:  
+![lslh](./images/lslh.png)
+
 
 ## Terminals, file-explorers, and more
 
@@ -166,6 +325,64 @@ Now find somewhere suitable to save the file with a proper name. VScode will alw
 
 Congratulations! Now VScode is set and you're ready to go!
 
+## Running jobs on the cluster
+
+```bash
+#!/bin/bash
+#SBATCH --account=<PROJECT_YOU_BELONG_TO>
+#SBATCH --cpus-per-task=<CPU_NUM>
+#SBATCH --mem=<MEM>g
+#SBATCH --time=<HH:MM:SS>
+```
+
+## Structure a project
+
+```txt
+<YOUR_FOLDER>/
+|
+|__<PROJECT_NAME>/
+    |
+    |
+    |__docs/                <---- Optional extra directory for documentation created in relation to the project with
+    |     |                       sub-directory for images.
+    |     |
+    |     |__images/
+    |
+    |__scripts/             <---- All scripts are to be contained within this directory. The internal organization of this 
+    |                             directory is for the user to decide, though an obvious structure is appreciated.
+    |
+    |__steps/               <---- This directory should contain all intermediate and temporary files related to analyses.
+    |                             The internal organization of this directory is for the user to decide, though it should be
+    |                             indicative of which analysis the files belong to.
+    |__test_data/           <---- Optional extra directory for various test data.
+    |
+    |
+    |__results/             <---- Any final results pertaining to a perticular analysis should be placed in this directory.
+    |                             The internal organization of this directory is for the user to decide, though it should be
+    |                             clear which analysis the results are part of and when they were created.
+    |__README.txt           <---- Brief description of project.
+```
+
+If you're a part of **EcoGenetics** I have simplified it all a bit for you. You need to run the following:
+
+```bash
+echo -e "export PATH=\$PATH:/faststorage/project/EcoGenetics/scripts" >> "$HOME"/.bashrc
+```
+
+then run:
+
+```bash
+source "$HOME"/.bashrc
+```
+
+You now have access to the command *'project_setup'* which will create this entire structure for you. For it's description you ccan run:
+
+```bash
+project_setup -h
+```
+
+If you're not a part of **EcoGenetics** yet would like to utilize this script, it ca nbe found [here](../scripts/project_setup).
+
 ## Master students and above
 
 ### Git
@@ -177,3 +394,5 @@ Congratulations! Now VScode is set and you're ready to go!
 That's right, it's `git`. You may think it's optional but it's not. I know what you're thinking: "I don't need git, it seems needlessly complicated..." Stop it! You're going to use it... it has been decided... by me... and I'm in charge. Now go create a [GitHub account](https://github.com/). Off you go. I'll wait. Did you do it? Good! Welcome back then!
 
 `Git` in combination with GitHub is perfect for keeping our projects save, accessible and reproducible. And wonderfully enough, it integrates perfectly with our working environment in VScode.
+
+### GWF
