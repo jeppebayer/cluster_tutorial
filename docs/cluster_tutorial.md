@@ -138,7 +138,7 @@ This will download the latest version of *miniconda* to your current folder. whe
 bash Miniconda3-latest-Linux-x86_64.sh
 ```
 
-This runs the script and installs *miniconda*. Just follow the instructions and say 'yes' when it asks you if it should run `conda init`. When it's done you can check if there is a new folder with the `ls` command. You should also notice a small '(base)' next to your prompt. This indicates you current environment, which in this case is the 'base' environment.
+This runs the script and installs *miniconda*. Just follow the instructions and say 'yes' when it asks you if it should run `conda init`. When it's done you can check if there is a new folder with the `ls` command. You should also notice a small '(base)' next to your prompt (You may have to log out and back in for it to take effect). This indicates you current environment, which in this case is the 'base' environment.
 
 **Configure**  
 Let us do a little configuring to make `conda` work a little smoother. First we will add some *'channels'* to conda. Channels are data repositories where `conda` looks for packages. Some that will be useful for us are *'conda-forge'*, *'bioconda'*, *'genomedk'*, and *'gwforg'*. To add them, in the terminal type the following and after each press *ENTER*:
